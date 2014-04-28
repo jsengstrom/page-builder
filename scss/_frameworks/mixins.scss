@@ -1,0 +1,100 @@
+// PROJECT MIXINS --------------------- //
+
+//--------------------------------//
+
+//BREAKPOINTS
+
+@mixin bp($point) {
+  @if      $point == palm      { @media (min-width: $viewport_palm - 1px) { @content; } }
+  @else if $point == lap       { @media (min-width: $viewport_palm) { @content; } }
+  @else if $point == portable  { @media (min-width: $viewport_lap) { @content; } }
+  @else if $point == desk      { @media (min-width: $viewport_desk) { @content; } }
+  // additional breakpoints just state the argument //
+  @else { @media ($point) { @content; } }
+}
+
+//--------------------------------//
+
+//SVG BACKGROUND IMAGES
+
+@mixin svg($name, $xpos, $ypos) {
+  background: url('{#{$image_directory}#{$name}.png') no-repeat;
+  background: none, url('#{$image_directory}#{$name}.svg') no-repeat;
+  background-position: $xpos $ypos;
+}
+
+//--------------------------------//
+
+//RETINA BACKGROUND IMAGES
+
+@mixin image-2x($image, $width, $height) {
+  @media (min--moz-device-pixel-ratio: 1.3),
+      (-o-min-device-pixel-ratio: 2.6/2),
+      (-webkit-min-device-pixel-ratio: 1.3),
+      (min-device-pixel-ratio: 1.3),
+      (min-resolution: 1.3dppx) {
+    background-image: url('#{$image_directory}#{$image}');
+    background-size: $width $height;
+  }
+}
+
+//--------------------------------//
+
+//PLACEHOLDER COLOR
+
+@mixin placeholder($phcolor) {
+  ::-webkit-input-placeholder { color:$phcolor; }
+  ::-moz-placeholder { color:$phcolor; }
+  :-ms-input-placeholder { color:$phcolor; }
+  input:-moz-placeholder { color:$phcolor; }
+}
+
+//--------------------------------//
+
+//POSITIONING
+
+@mixin pos($position, $args) {
+  position: $position;
+  $offsets: top right bottom left;
+  @each $o in $offsets {
+    $i: index($args, $o);
+    @if $i
+      and $i + 1 <= length($args)
+      and type-of( nth($args, $i + 1) ) == number {
+      #{$o}: nth($args, $i + 1);
+    }
+  }
+}
+
+@mixin absolute($args) {
+  @include pos(absolute, $args);
+}
+
+@mixin fixed($args) {
+  @include pos(fixed, $args);
+}
+
+@mixin relative($args) {
+  @include pos(relative, $args);
+}
+
+//--------------------------------//
+
+//SIZE
+
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+
+//--------------------------------//
+
+
+//IE FIXES
+
+@mixin fix($browser) {
+  .#{$browser} & { @content; }
+}
+
+//--------------------------------//

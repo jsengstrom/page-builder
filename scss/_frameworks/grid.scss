@@ -1,0 +1,208 @@
+// GRID --------------------- //
+
+//--------------------------------//
+
+// GRID MIXINS
+
+$breakpoints: (
+  'palm' '(max-width: #{$viewport_palm - 1px})',
+  'lap' '(min-width: #{$viewport_palm})',
+  'portable' '(min-width: #{$viewport_lap})',
+  'desk' '(min-width: #{$viewport_desk})'
+)!default;
+
+$breakpoint-has-widths: ('palm', 'lap', 'portable', 'desk')!default;
+
+@mixin grid-media-query($media-query){
+  $breakpoint-found: false;
+
+  @each $breakpoint in $breakpoints{
+    $name: nth($breakpoint, 1);
+    $declaration: nth($breakpoint, 2);
+
+    @if $media-query == $name and $declaration{
+      $breakpoint-found: true;
+
+      @media only screen and #{$declaration}{
+        @content;
+      }
+    }
+  }
+
+  @if $breakpoint-found == false{
+    @warn "Breakpoint ‘#{$media-query}’ does not exist"
+  }
+}
+
+//--------------------------------//
+
+// GRID SETUP
+
+%grid{
+  list-style:none;
+  margin:0;
+  padding:0;
+  margin-left:-$gutter;
+}
+
+%grid__item{
+  width:100%;
+  padding-left:$gutter;
+  vertical-align:top !important;
+  @include inline-block;
+}
+
+//--------------------------------//
+
+// REVERSE GRID
+
+%grid--rev{
+  direction:rtl;
+  text-align:left;
+
+  > %grid__item{
+    direction:ltr;
+    text-align:left;
+  }
+}
+
+//--------------------------------//
+
+// GRID EXTENDS
+
+//No Gutter
+%grid--full{
+  margin-left:0;
+
+  > %grid__item{
+    padding-left:0;
+  }
+}
+
+//Reverse order of the markup
+%grid--right{
+  text-align:right;
+
+  > %grid__item{
+    text-align:left;
+  }
+}
+
+//Align center
+%grid--center{
+  text-align:center;
+
+  > %grid__item{
+    text-align:left;
+  }
+}
+
+//Vertical Algin Middle
+%grid--middle{
+
+  > %grid__item{
+    vertical-align:middle;
+  }
+}
+
+//Vertical Align Bottom
+%grid--bottom{
+
+  > %grid__item{
+    vertical-align:bottom;
+  }
+}
+
+//Half Gutter width
+%grid--narrow{
+  margin-left:-($gutter / 2);
+
+  > %grid__item{
+    padding-left:$gutter / 2;
+  }
+}
+
+//Double Gutter Width
+%grid--wide{
+  margin-left:-($gutter * 2);
+
+  > %grid__item{
+    padding-left:$gutter * 2;
+  }
+}
+
+//--------------------------------//
+
+// WIDTHS
+@mixin device-type($namespace:""){
+
+  // Whole
+  %#{$namespace}one-whole         { width:100%; }
+
+  // Halves
+  %#{$namespace}one-half          { width:50%; }
+
+  // Thirds
+  %#{$namespace}one-third         { width:33.333%; }
+  %#{$namespace}two-thirds        { width:66.666%; }
+
+  // Quarters
+  %#{$namespace}one-quarter       { width:25%; }
+  %#{$namespace}two-quarters      { @extend %#{$namespace}one-half; }
+  %#{$namespace}three-quarters    { width:75%; }
+
+  // Fifths
+  %#{$namespace}one-fifth         { width:20%; }
+  %#{$namespace}two-fifths        { width:40%; }
+  %#{$namespace}three-fifths      { width:60%; }
+  %#{$namespace}four-fifths       { width:80%; }
+
+  // Sixths
+  %#{$namespace}one-sixth         { width:16.666%; }
+  %#{$namespace}two-sixths        { @extend %#{$namespace}one-third; }
+  %#{$namespace}three-sixths      { @extend %#{$namespace}one-half; }
+  %#{$namespace}four-sixths       { @extend %#{$namespace}two-thirds; }
+  %#{$namespace}five-sixths       { width:83.333%; }
+
+  // Eighths
+  %#{$namespace}one-eighth        { width:12.5%; }
+  %#{$namespace}two-eighths       { @extend %#{$namespace}one-quarter; }
+  %#{$namespace}three-eighths     { width:37.5%; }
+  %#{$namespace}four-eighths      { @extend %#{$namespace}one-half; }
+  %#{$namespace}five-eighths      { width:62.5%; }
+  %#{$namespace}six-eighths       { @extend %#{$namespace}three-quarters; }
+  %#{$namespace}seven-eighths     { width:87.5%; }
+
+  // Tenths
+  %#{$namespace}one-tenth         { width:10%; }
+  %#{$namespace}two-tenths        { @extend %#{$namespace}one-fifth; }
+  %#{$namespace}three-tenths      { width:30%; }
+  %#{$namespace}four-tenths       { @extend %#{$namespace}two-fifths; }
+  %#{$namespace}five-tenths       { @extend %#{$namespace}one-half; }
+  %#{$namespace}six-tenths        { @extend %#{$namespace}three-fifths; }
+  %#{$namespace}seven-tenths      { width:70%; }
+  %#{$namespace}eight-tenths      { @extend %#{$namespace}four-fifths; }
+  %#{$namespace}nine-tenths       { width:90%; }
+
+  // Twelfths
+  %#{$namespace}one-twelfth       { width:8.333%; }
+  %#{$namespace}two-twelfths      { @extend %#{$namespace}one-sixth; }
+  %#{$namespace}three-twelfths    { @extend %#{$namespace}one-quarter; }
+  %#{$namespace}four-twelfths     { @extend %#{$namespace}one-third; }
+  %#{$namespace}five-twelfths     { width:41.666% }
+  %#{$namespace}six-twelfths      { @extend %#{$namespace}one-half; }
+  %#{$namespace}seven-twelfths    { width:58.333%; }
+  %#{$namespace}eight-twelfths    { @extend %#{$namespace}two-thirds; }
+  %#{$namespace}nine-twelfths     { @extend %#{$namespace}three-quarters; }
+  %#{$namespace}ten-twelfths      { @extend %#{$namespace}five-sixths; }
+  %#{$namespace}eleven-twelfths   { width:91.666%; }
+
+}
+
+@each $name in $breakpoint-has-widths {
+    @include grid-media-query($name) {
+       @include device-type('#{$name}--');
+    }
+}
+
+//--------------------------------//
