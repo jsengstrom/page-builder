@@ -26,8 +26,6 @@ If you don't have these it's not going to work:
 1. **EITHER** [ACF v5 pro](https://github.com/AdvancedCustomFields/acf5-beta) (currently in beta, please play by the rules) **OR** [ACF v4](http://www.advancedcustomfields.com) with all premium add-ons installed (must be purchased).
 2. jQuery
 
-It is recommended that you use this with my [Starter Theme](https://github.com/jsengstrom/blank-wp-theme) and Codekit 2. It will work without, but you may need to change a few file paths to get it up and running.
-
 ## Plugin Copyrights and Licenses
 
 This module relies upon external products (ACF and various JS plugins) in order to do it's thing.
